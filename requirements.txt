@@ -1,0 +1,13 @@
+flask
+folium
+flask-restful
+requests
+gunicorn
+ipaddress
+flask-compress
+gevent
+branca
+pandas
+vega
+firebase_admin
+python-firebase
