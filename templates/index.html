@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Map with Markers</title>
+  <!-- Include necessary libraries -->
+  <!-- jQuery -->
+</script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!-- Include the Folium library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/folium/0.12.1/folium.min.js"></script>
+  <!-- <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script> -->
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+  <script>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCftQh36nj5qAUFHE6jtW_wcpwCzhPRon0",
+        authDomain: "testemonit-b47a7.firebaseapp.com",
+        databaseURL: "https://testemonit-b47a7-default-rtdb.firebaseio.com",
+        projectId: "testemonit-b47a7",
+        storageBucket: "testemonit-b47a7.appspot.com",
+        messagingSenderId: "603706248560",
+        appId: "1:603706248560:web:76140678d5c418f5b593b5"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <!-- Create a map container -->
+  <div id="map" style="width: 100%; height: 500px;"></div>
+
+  <!-- Define the modal for marker data -->
+  <div id="markerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="markerModalTitle"></h4>
+        </div>
+        <div class="modal-body">
+          <div id="markerData"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add custom JavaScript code -->
+  <script>
+    // Function to make AJAX request and open modal with marker data
+    function openMarkerModal(markerId) {
+      // Make AJAX request to fetch marker data
+      var dataPoints = [];
+      $.ajax({
+        url: '/getData',
+        method: 'GET',
+        data: { id: markerId },
+        success: function(response) {
+          // Update modal title and data
+          //$('#markerModalTitle').text(response.title);
+          //$('#markerData').html(response.data);
+          response = JSON.parse(response);
+          var phValues = response['PH'];
+          console.log(response);
+          console.log(typeof response);
+          console.log(phValues);
+
+            for (let key in response) {
+                if(key === "PH"){
+                    console.log('here');
+                }
+                console.log(key, response[key]);
+            }
+          
+            
+            phValues.forEach(([phValue, timeCreated]) => {
+                console.log(`PH: ${phValue}, Time Created: ${timeCreated}`);
+                var ts = Date.parse(timeCreated);
+                const dateObject = new Date(timeCreated);
+                console.log(dateObject); // Output: Wed Mar 22 2023 13:32:22 GMT+0000 (Coordinated Universal Time)
+
+                // Convert to timestamp
+                const timestamp = dateObject.getTime();
+                console.log(timestamp); // Output: 1679617942138
+                dataPoints.push({
+                    label: dateObject,
+                    y: parseInt(phValue)
+                });
+            });
+
+            console.log(dataPoints);
+
+            
+
+            var chart = new CanvasJS.Chart("markerData", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Monitoramento de pH"
+                },
+                axisX: {
+                    title: "Tempo"
+                },
+                axisY: {
+                    title: "pH",
+                    //includeZero: false,
+                    minimum: 1,
+                    maximum: 14
+                },
+                data: [{
+                    type: 'line',
+                    xValueFormatString: "DD-MM-YYYY HH:MM",
+                    dataPoints: dataPoints,
+                    indexLabel: "{y}",
+                    indexLabelFontSize: 16,
+                    indexLabelPlacement: "outside",
+                },]
+            });
+            //chart.getContext('2d', { willReadFrequently: true });
+            chart.render();
+          // Open the modal
+          $('#markerModal').modal('show');
+          chart.render();
+        },
+        error: function(error) {
+          console.log('Error:', error);
+        }
+      });
+    }
+
+    // Create a map instance
+    var map = L.map('map').setView([-3.08837065662679, -59.96461509815111], 14);
+
+    // Add a tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Create markers with click events
+    var marker1 = L.marker([-3.08837065662679, -59.96461509815111]).addTo(map);
+    marker1.on('click', function() {
+      openMarkerModal(1);
+    });
+
+    var marker2 = L.marker([-3.08837065662679, -60.96461509815111]).addTo(map);
+    marker2.on('click', function() {
+      openMarkerModal(2);
+    });
+  </script>
+</body>
+</html>
