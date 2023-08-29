@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  zephyr-teste:
+    build: .
+    container_name: zephyr-teste
+    image: zephyr-teste
+    ports:
+      - "5000:5000"
+    restart: always
+    environment:
+      - FLASK_ENV=development
+      - LOCAL_ENV=true
+      - FLASK_APP=main.py
+    network_mode: bridge

@@ -18,11 +18,17 @@ from firebase_admin import credentials, db
 app = Flask(__name__)
 compress = Compress(app)
 
+'''
+    @desc funcao de teste da aplicacao. Para acessar: http:IP/DNS:PORTA/app
+'''
 @app.route("/app")
 def hello():
-    user = os.getenv('TEST_VARIABLE')
+    user = 'TEST_VARIABLE' in os.environ ? os.getenv('TEST_VARIABLE') : ' usuário rodando local!'
     return "Hi!" + user
 
+
 if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=5000, debug=True)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT'))
+    if 'LOCAL_ENV' in os.environ:
+        app.run(host='0.0.0.0', port=5000, debug=True)
+    else:
+        app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT'))
