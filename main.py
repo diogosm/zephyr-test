@@ -148,6 +148,7 @@ def hello():
 '''
 @app.route('/chat')
 def chat():
+    session.clear()
     session_id = secrets.token_hex(16)
     print(session_id, flush=True)
     createSession(session_id)
