@@ -12,4 +12,5 @@ services:
       - FLASK_ENV=development
       - LOCAL_ENV=true
       - FLASK_APP=main.py
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     network_mode: bridge
