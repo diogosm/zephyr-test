@@ -11,3 +11,7 @@ pandas
 vega
 firebase_admin
 python-firebase
+openai
+wandb
+transformers
+datasets

@@ -5,30 +5,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<div class="center">
-    <div class="chat">
-        <div class="contact bar">
-            <div class="pic stark"></div>
-            <div class="name">
-                Tony Stark
-            </div>
-            <div class="seen">
-                Today at 12:56
-            </div>
-        </div>
-        <div class="messages" id="chat">
-            <div class="time">
-                Today at 11:41
-            </div>
-            <div class="message parker">
-                Hey, man! What's up, Mr Stark? 👋
-            </div>
-            <!-- Rest of the provided code -->
-        </div>
-        <div class="input">
-            <i class="fas fa-camera"></i><i class="far fa-laugh-beam"></i><input placeholder="Type your message here!" type="text" /><i class="fas fa-microphone"></i>
+
+    <input type="hidden" name="session_id" id="session_id" value="{{ session_id }}">
+    <div id='bodybox'>
+        <div id='chatborder'>
+            <p id="chatlog1" class="chatlog">&nbsp;</p>
+            <input type="text" name="chat" id="chatbox" placeholder="Olá! Escreva aqui para começar a falar comigo!" onfocus="placeHolder()">
         </div>
     </div>
-</div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
