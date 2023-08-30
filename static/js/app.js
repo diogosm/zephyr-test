@@ -116,6 +116,8 @@ $(document).ready(function () {
                     console.log("msg: " + newMessage.textContent);
                     chatborder.insertBefore(newMessage, chatborder.lastElementChild);
 
+                    Speech(botMessage);
+
                     const chatbox = document.getElementById('chatbox');
                     chatbox.scrollIntoView({ behavior: 'smooth' });
                 })
@@ -133,6 +135,9 @@ $(document).ready(function () {
 //https://developers.google.com/web/updates/2014/01/Web-apps-that-talk-Introduction-to-the-Speech-Synthesis-API
     function Speech(say) {
         if ('speechSynthesis' in window && talking) {
+            const synth = window.speechSynthesis;
+            const voices = synth.getVoices();
+            const voice = voices.find((v) => v.lang === 'pt-BR' && v.name.includes('female'));
             var utterance = new SpeechSynthesisUtterance(say);
             //msg.voice = voices[10]; // Note: some voices don't support altering params
             //msg.voiceURI = 'native';
@@ -140,7 +145,9 @@ $(document).ready(function () {
             //utterance.rate = 0.1; // 0.1 to 10
             //utterance.pitch = 1; //0 to 2
             //utterance.text = 'Hello World';
-            //utterance.lang = 'en-US';
+            utterance.lang = 'pt-BR';
+            utterance.voice = voice;
+            //utterance.voice = voices[2];
             speechSynthesis.speak(utterance);
         }
     }
